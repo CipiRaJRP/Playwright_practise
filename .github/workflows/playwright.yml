@@ -20,7 +20,7 @@ jobs:
       - name: Checkout ShopKart App
         uses: actions/checkout@v4
         with:
-          repository: bala-builds/sdet-retail-app
+          repository: jaisingh-builds/sdet-retail-app
           ref: shopkart
           path: sdet-retail-app
 
