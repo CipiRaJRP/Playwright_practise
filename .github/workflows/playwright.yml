@@ -69,4 +69,5 @@ jobs:
           cd sdet-retail-app
           chmod +x scripts/shopkart-start.sh
           ./scripts/shopkart-start.sh > app.log 2>&1 &
-          sleep
+          sleep 20
+          cat app.log
