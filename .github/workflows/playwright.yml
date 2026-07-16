@@ -8,49 +8,57 @@ on:
 
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
+      # Checkout Playwright repo
       - name: Checkout Playwright Repo
         uses: actions/checkout@v4
 
-      - name: Checkout ShopKart App Repo
+      # Checkout ShopKart repo
+      - name: Checkout ShopKart App
         uses: actions/checkout@v4
         with:
-          repository: <ORG_NAME>/sdet-retail-app
+          repository: jaisingh-builds/sdet-retail-app
           path: sdet-retail-app
-          token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 22
 
+      # Install Playwright project dependencies
       - name: Install Playwright Dependencies
         run: npm ci
 
+      # Install ShopKart dependencies
       - name: Install ShopKart Dependencies
         run: |
           cd sdet-retail-app
           npm ci
 
+      # Start ShopKart
       - name: Start ShopKart
         run: |
           cd sdet-retail-app
           chmod +x scripts/shopkart-start.sh
           ./scripts/shopkart-start.sh &
       
+      # Wait until localhost:8080 is available
       - name: Wait for ShopKart
-        run: |
-          npx wait-on http://localhost:8080 --timeout 120000
+        run: npx wait-on http://localhost:8080 --timeout 120000
 
+      # Install Browsers
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+      # Run Tests
       - name: Run Playwright Tests
         run: npx playwright test ./tests/endToend.spec.ts
 
+      # Upload Report
       - name: Upload Report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
