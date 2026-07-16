@@ -1,0 +1,18 @@
+{
+	"servers": {
+		"playwright-test": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"playwright",
+				"run-test-mcp-server"
+			]
+		},
+		"my-mcp-server-bc86a364": {
+			"type": "stdio",
+			"command": "run-test-mcp-server",
+			"args": []
+		}
+	},
+	"inputs": []
+}
