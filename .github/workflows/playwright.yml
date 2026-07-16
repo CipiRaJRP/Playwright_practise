@@ -38,7 +38,7 @@ jobs:
       - name: Install ShopKart Dependencies
         run: |
           cd sdet-retail-app
-          npm ci
+          npm install
 
       # Start ShopKart
       - name: Start ShopKart
