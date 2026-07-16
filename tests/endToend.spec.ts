@@ -54,5 +54,5 @@ test('ShopKart Validation', async ({ shop, log, page }) => {
     await expect(shop.checkTheStatus()).toHaveText("PLACED");
     log.info("Verified order status is PLACED");
 
-    log.info(" -----ShopKart Validation completed successfully-----");
+    log.info(" -----✅ ShopKart Validation completed successfully-----");
 });
