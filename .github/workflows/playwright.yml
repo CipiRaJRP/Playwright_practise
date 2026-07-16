@@ -40,17 +40,16 @@ jobs:
           cd sdet-retail-app
           npm install
 
-      # Install Frontend dependencies
       - name: Install Frontend Dependencies
         run: |
           cd sdet-retail-app/frontend
           npm install
 
-      # Install Backend dependencies
       - name: Install Backend Dependencies
         run: |
-          cd ../backend
+          cd sdet-retail-app/backend
           npm install
+
 
       # Create .env
       - name: Create .env
