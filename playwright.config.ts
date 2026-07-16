@@ -1,5 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+import env from "dotenv"
 
+env.config();
 export default defineConfig({
   testDir: "./tests",
   timeout: 30_000,
@@ -14,9 +16,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video:"retain-on-failure",
     
-      launchOptions: {
-    slowMo: 1000, 
-  },
+ 
 
   },
   projects: [
