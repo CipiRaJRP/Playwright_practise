@@ -2,9 +2,6 @@ import winston from "winston";
 
 const { combine, timestamp, json, errors,printf} = winston.format;
 const sensitiveKeys = new Set(["authorization", "cardnumber", "cvv", "password", "token"]);
-const logFormat = printf(({ level, message }) => {
-return `[${level.toUpperCase()}] - ${message}`;
-});
 export function redactForLog(value: unknown): unknown {
    if (Array.isArray(value)) {
       return value.map(redactForLog);
@@ -35,9 +32,14 @@ const redactSensitiveFields = winston.format((info) => {
 });
 
 export const logger = winston.createLogger({
-   level: process.env.LOG_LEVEL ?? "info",
-   format: combine(redactSensitiveFields(),winston.format.errors({ stack: true }),logFormat),
-   transports: [new winston.transports.Console()],
+  level: "info",
+  format: combine(
+    timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    printf(({ timestamp, level, message }) =>
+      `[${timestamp}] [${level.toUpperCase()}] - ${message}`
+    )
+  ),
+  transports: [new winston.transports.Console()],
 });
 
 export type Applogger = typeof logger;
