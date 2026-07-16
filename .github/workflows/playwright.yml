@@ -80,6 +80,8 @@ jobs:
           echo "DB_USER=shopkart" >> .env
           echo "DB_PASSWORD=shopkart" >> .env
           echo "SHOPKART_ALICE_PASSWORD=${{ secrets.SHOPKART_ALICE_PASSWORD }}" >> .env
+          echo "SHOPKART_BOB_PASSWORD=${{ secrets.SHOPKART_BOB_PASSWORD }}" >> .env
+          echo "SHOPKART_CAROL_PASSWORD=${{ secrets.SHOPKART_CAROL_PASSWORD }}" >> .env
 
       # Verify MySQL Connection
       - name: Verify MySQL
