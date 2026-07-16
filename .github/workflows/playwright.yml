@@ -11,6 +11,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: shopkart
+          MYSQL_USER: shopkart
+          MYSQL_PASSWORD: shopkart
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       # Checkout Playwright repo
       - name: Checkout Playwright Repo
@@ -40,26 +56,36 @@ jobs:
           cd sdet-retail-app
           npm install
 
+      # Install Frontend Dependencies
       - name: Install Frontend Dependencies
         run: |
           cd sdet-retail-app/frontend
           npm install
 
+      # Install Backend Dependencies
       - name: Install Backend Dependencies
         run: |
           cd sdet-retail-app/backend
           npm install
-
 
       # Create .env
       - name: Create .env
         run: |
           cd sdet-retail-app
           cp .env.example .env
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_NAME=shopkart" >> .env
+          echo "DB_USER=shopkart" >> .env
+          echo "DB_PASSWORD=shopkart" >> .env
+
+      # Verify MySQL Connection
+      - name: Verify MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          mysql -h 127.0.0.1 -u shopkart -pshopkart -e "SHOW DATABASES;"
 
       # Verify Vite installation
       - name: Verify Vite
@@ -73,42 +99,34 @@ jobs:
           cd sdet-retail-app
           chmod +x scripts/shopkart-start.sh
           ./scripts/shopkart-start.sh > app.log 2>&1 &
-          sleep 20
+          sleep 30
           cat app.log
 
-      - name: Print App Log
-        if: always()
-        run: |
-          cd sdet-retail-app
-          echo "===== APP LOG ====="
-          cat app.log    
-      
-
-# Wait until application is up
+      # Wait until application is up
       - name: Wait for ShopKart
         run: |
-         npx wait-on http://localhost:8080 --timeout 180000
+          npx wait-on http://localhost:8080 --timeout 180000
 
-# Install Playwright browsers
+      # Install Playwright Browsers
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-# Run tests
+      # Run Playwright Tests
       - name: Run Playwright Tests
         run: npx playwright test ./tests/endToend.spec.ts
 
-# Print app logs if test fails
+      # Print logs if failed
       - name: Print App Logs
         if: failure()
         run: |
-         cd sdet-retail-app
-         cat app.log || true
+          cd sdet-retail-app
+          cat app.log || true
 
-# Upload Playwright report
+      # Upload Playwright Report
       - name: Upload Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-         name: playwright-report
-         path: playwright-report/
-         retention-days: 30          
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
