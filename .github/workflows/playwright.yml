@@ -50,9 +50,11 @@ jobs:
       # Start ShopKart
       - name: Start ShopKart
         run: |
-          cd sdet-retail-app
+         cd sdet-retail-app
           chmod +x scripts/shopkart-start.sh
-          ./scripts/shopkart-start.sh &
+          ./scripts/shopkart-start.sh > app.log 2>&1 &
+          sleep 20
+          cat app.log
       
       # Wait until localhost:8080 is available
       - name: Wait for ShopKart
