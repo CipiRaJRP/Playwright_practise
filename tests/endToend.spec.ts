@@ -1,6 +1,6 @@
 import { test, expect } from "../fixtures/shopfixtures";
-import { Secrets } from "../utilities/secrets";
-import { testdata } from "../utilities/testdata";
+import { Secrets } from "../utils/secrets";
+import { testdata } from "../utils/testdata";
 
 test('ShopKart Validation', async ({ shop, log, page }) => {
 
