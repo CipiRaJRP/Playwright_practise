@@ -32,7 +32,7 @@ jobs:
 
       # Install Playwright project dependencies
       - name: Install Playwright Dependencies
-        run: npm ci
+        run: npm install
 
       # Install ShopKart dependencies
       - name: Install ShopKart Dependencies
