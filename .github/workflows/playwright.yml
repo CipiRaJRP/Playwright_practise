@@ -75,6 +75,13 @@ jobs:
           ./scripts/shopkart-start.sh > app.log 2>&1 &
           sleep 20
           cat app.log
+
+      - name: Print App Log
+        if: always()
+        run: |
+          cd sdet-retail-app
+          echo "===== APP LOG ====="
+          cat app.log    
       
 
 # Wait until application is up
